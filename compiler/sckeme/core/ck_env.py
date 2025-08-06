@@ -35,6 +35,9 @@ class Env:
             raise TypeError(f"Can only update an environment with another environment. {type(other)}, {other}")
         self.bindings.update(other.bindings)
 
+    def set(self, name, value):
+        self[name] = value
+
     def get(self, name):
         return self[name] # we have __getitem__
 

@@ -5,7 +5,9 @@ It is most closely inspired by Racket as this is what we learn in first year at 
 
 I wanted to implement lazy evaluation, lambda functions, and simple first-class function support.
 
-Current bugs are that closures are half-baked, if it's a closure bound to a defined variable it returns a closure object instead of its "forced"/"evaluated" value, I will find and fix this tomorrow...
+To help debug I changed it to eager evaluation, and fixed everything else.
+I will convert it back to lazy soon, I have a simple Thunk class to help with this...
+Then will finish expanding it.
 
 This repo includes:
 
@@ -22,16 +24,15 @@ This repo includes:
 - Lexical scoping and closures
 - `cond` for conditional branching
 - Recursion
+- REPL environment, caches previous return value in variable name `$1` to help with debugging.
 
 Example:
 
 ```lisp
-(def (square x) (* x x))
-
 (def (make-multiplier x)
   (lambda (y) (* x y)))
 
-(def (times2 x) (make-multiplier 2))
+(def (times2 x) ((make-multiplier 2) x))
 
 (times2 5)
 ; Outputs:
@@ -50,9 +51,10 @@ Example:
 
 ### Language 
 
-1. Fix the closure bug
+1. Bring back lazy evaluation. I want call-by-need too so infinite data-types/streams etc. will all work.
 2. Add lists and functional standard functions like map, append (maybe ++ like in Haskell?), foldl, foldr, car, cdr, etc...
 3. Typing, and type hints
+4. Tail call optimization
 
 ### Ecosystem
 

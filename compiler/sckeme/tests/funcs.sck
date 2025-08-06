@@ -1,0 +1,6 @@
+(((lambda (x)
+  (lambda (y) (* (* x x) y))) 4) 5)
+
+(def (sq-mult x) (lambda (y) (* (* x x) y)))
+
+((sq-mult 4) 5)

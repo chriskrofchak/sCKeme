@@ -10,7 +10,12 @@
 
 (sq x)
 
+(sq pi)
+
 (cond [(= x 2) 4]
+       else 5)
+
+(cond [(= (incr x) 2) 4]
        else 5)
 
 (cond [(= x 3) 1])

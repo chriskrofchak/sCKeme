@@ -13,7 +13,7 @@ if __name__ == "__main__":
     fails = set()
     for file in files:
         print("===", file)
-        # if file != 'closures.sck': continue # not ready
+        # if file != 'funcs.sck': continue # not ready
         with open(f"{prefix}/{file}", "r") as f:
             code = f.read()
         parser = SCKemeParser()
@@ -24,13 +24,12 @@ if __name__ == "__main__":
             print(stmt)
             try:
                 result = repler.visit(stmt)
-                if result:
+                if result is not None:
                     print(">", result)
-                    if not isinstance(result, (str, int, float)):
-                        print("   >", repr(result))
+                    repler.env.set('$1', result) # cache previous result
             except Exception as e:
                 print(f"FAILED IN {file} ON {stmt} WITH", repr(e))
-                raise e
+                # raise e
                 fails |= { file }
         else:
             print("PASSED", file)

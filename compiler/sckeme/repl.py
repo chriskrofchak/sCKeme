@@ -10,12 +10,12 @@ if __name__ == "__main__":
     parser = SCKemeParser()
     repler = Interpreter()
     while True:
-        code = input("sCKeme>")
+        code = input(">>>")
         parsed_tree = parser.parse(code)
         assert isinstance(parsed_tree, Statements)
         assert len(parsed_tree.statements) == 1
         line = parsed_tree.statements[0]
         value = repler.visit(line)
-        if value:
-            print(value)
-        
+        if value is not None:
+            print(">", value)
+            repler.env.set('$1', value) # cache previous result

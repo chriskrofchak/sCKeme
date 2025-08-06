@@ -91,7 +91,7 @@ class Conditional(Expr):
 
 @dataclass
 class Call(Expr):
-    func: str
+    func: Union[Var, Lambda, 'Call']
     args: List[Expr]
 
     def __str__(self):

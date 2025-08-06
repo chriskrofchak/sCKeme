@@ -22,7 +22,7 @@ lambda_expr: "(" "lambda" "(" SYMBOL* ")" expr ")"
 cond_branch: "[" expr expr "]"
 else_arm: "else" expr
 
-SYMBOL: /[a-zA-Z_+\-*\/=<>!?][a-zA-Z0-9_+\-*\/=<>!?]*/
+SYMBOL: /[a-zA-Z_+\-*\/=<>!?$][a-zA-Z0-9_+\-*\/=<>!?]*/
 NUMBER: /-?\d+(\.\d+)?/
 STRING: ESCAPED_STRING
 

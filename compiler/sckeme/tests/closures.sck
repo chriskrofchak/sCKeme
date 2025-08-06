@@ -4,16 +4,20 @@
 
 (def (add-n y) (lambda (x) (+ (* x x) y)))
 
-(def (add-5 x) (add-n 5))
+(def (add-5 x) ((add-n 5) x))
 
 (add-5 10)
 
 (def (make-multiplier x)
   (lambda (y) (* x y)))
 
-(def (times2 x) (make-multiplier 2))
+(def (times2 x) ((make-multiplier 2) x))
 
 (times2 5)
+
+(def times22 (make-multiplier 2))
+
+(times22 5)
 
 ((lambda (y) (* y y)) 5)
 
@@ -22,3 +26,5 @@
 
 ((lambda (x)
   (lambda (y) (* (* x x) y))) 4)
+
+($1 5)
