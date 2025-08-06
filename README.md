@@ -1,7 +1,7 @@
 # sCKeme
 
 **sCKeme** is a minimal, functional, LISP-like programming language implemented in Python. 
-It is most closely inspired Racket as this is what we learn in first year at UW (and thus Scheme, hence the name). 
+It is most closely inspired by Racket as this is what we learn in first year at UW (and thus Scheme, hence the name). 
 
 I wanted to implement lazy evaluation, lambda functions, and simple first-class function support.
 
