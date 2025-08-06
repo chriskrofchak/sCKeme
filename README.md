@@ -42,6 +42,7 @@ Example:
                 else (+ (- (* 2 n) 1) (square (- n 1)))))
 
 (def tea 24)
+(square tea)
 ; Outputs:
 ; > 576
 
