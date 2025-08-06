@@ -1,0 +1,16 @@
+(def x 2)
+
+(def pi 3.14)
+
+(def mood "happyyy")
+
+(def (sq x) (* x x))
+
+(def (incr x) (+ x 1))
+
+(sq x)
+
+(cond [(= x 2) 4]
+       else 5)
+
+(cond [(= x 3) 1])

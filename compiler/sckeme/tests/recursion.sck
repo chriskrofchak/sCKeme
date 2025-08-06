@@ -1,0 +1,29 @@
+(def (fib n) (cond [(<= n 1) 1]
+             else (+ (fib (- n 1)) (fib (- n 2)))))
+
+
+(def (square n) (cond [(<= n 0) 0]
+                else (+ (- (* 2 n) 1) (square (- n 1)))))
+
+(def tea 24)
+
+(fib 1)
+(fib 2)
+(fib 3)
+(fib 4)
+(fib 5)
+(fib 6)
+(fib 7)
+(fib 8)
+
+(square 0)
+(square 1)
+(square 2)
+(square 3)
+(square 4)
+(square 5)
+(square 6)
+(square 7)
+(square 8)
+
+(square tea)

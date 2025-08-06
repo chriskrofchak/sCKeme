@@ -1,0 +1,24 @@
+(def (add-1 x) (+ x 1))
+
+(add-1 1)
+
+(def (add-n y) (lambda (x) (+ (* x x) y)))
+
+(def (add-5 x) (add-n 5))
+
+(add-5 10)
+
+(def (make-multiplier x)
+  (lambda (y) (* x y)))
+
+(def (times2 x) (make-multiplier 2))
+
+(times2 5)
+
+((lambda (y) (* y y)) 5)
+
+(((lambda (x)
+  (lambda (y) (* (* x x) y))) 4) 5)
+
+((lambda (x)
+  (lambda (y) (* (* x x) y))) 4)

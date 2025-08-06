@@ -1,0 +1,13 @@
+# ignore Mac DS_STORE
+.DS_STORE
+
+# following folders to ignore, will remove compiler when it's done
+# compiler
+.vscode
+passes/build
+passes/llvm-project
+
+# ignore LLVM output files, bytecode and executables
+*.out
+*.bc
+*.ll
