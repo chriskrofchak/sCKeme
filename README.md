@@ -40,7 +40,9 @@ Example:
 (def (square n) (cond [(<= n 0) 0]
                 else (+ (- (* 2 n) 1) (square (- n 1)))))
 
-(def tea 24) ; 
+(def tea 24)
+; Outputs:
+; > 576
 
 ```
 
