@@ -1,8 +1,9 @@
-from core.ck_ast import Expr, Literal
+from core.ck_ast import Expr, Literal, BaseInterpreter
 from core.ck_env import Env
 
 class Thunk:
-    def __init__(self, expr: Expr, env: Env):
+    def __init__(self, expr: Expr, env: Env, why = None):
+        # print("Thunking:", expr, f"(why = {why})" if why else "")
         self.expr    = expr
         self.literal = isinstance(expr, Literal)
         self.env     = env if not self.literal else None
@@ -16,11 +17,12 @@ class Thunk:
         )
 
     # interpreter should be an interpreter class
-    def force(self, interpreter):
+    def force(self, interpreter: BaseInterpreter):
         if not self._forced:
             # print("thunking", self.expr)
             # print("  with:", self.env)
             # assert 1 == 3, "here 1 == 3"
+            # print("Forcing thunk:", self.expr, f"(is_literal: {self.literal})")
             self._value  = interpreter.visit_with_env(self.expr, self.env)
             self._forced = True
         return self._value

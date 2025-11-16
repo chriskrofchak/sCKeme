@@ -12,6 +12,8 @@ PASSED simple_var.sck
 === recursion.sck
 (def (fib n) (cond [(<= n 1) 1] else (+ (fib (- n 1)) (fib (- n 2)))))
 (def (square n) (cond [(<= n 0) 0] else (+ (- (* 2 n) 1) (square (- n 1)))))
+(def (square/acc n acc) (cond [(<= n 0) acc] else (square/acc (- n 1) (+ (- (* 2 n) 1) acc))))
+(def (square-2 n) (square/acc n 0))
 (def tea 24)
 (fib 1)
 > 1
@@ -49,7 +51,23 @@ PASSED simple_var.sck
 > 64
 (square tea)
 > 576
+(square-2 0)
+> 0
+(square-2 1)
+> 1
+(square-2 2)
+> 4
+(square-2 tea)
+> 576
 PASSED recursion.sck
+=== lazy.sck
+(cond [(= 0 0) 5] else (/ 1 0))
+> 5
+(cond [(= 1 0) (/ 1 0)] else "oh hey boo...")
+> oh hey boo...
+((lambda (x) "so this is more of a test...") (/ 1 0))
+> so this is more of a test...
+PASSED lazy.sck
 === closures.sck
 (def (add-1 x) (+ x 1))
 (add-1 1)
@@ -70,7 +88,7 @@ PASSED recursion.sck
 (((lambda (x) (lambda (y) (* (* x x) y))) 4) 5)
 > 80
 ((lambda (x) (lambda (y) (* (* x x) y))) 4)
-> Closure(params = ['y'], body = Call(func=Var(name='*'), args=[Call(func=Var(name='*'), args=[Var(name='x'), Var(name='x')]), Var(name='y')]), env = {'add-n', 'make-multiplier', 'add-1', 'times22', 'x', 'times2', '$1', 'add-5'})
+> Closure(params = ['y'], body = Call(func=Var(name='*'), args=[Call(func=Var(name='*'), args=[Var(name='x'), Var(name='x')]), Var(name='y')]), env = {'add-1', 'add-5', 'times22', 'x', 'times2', 'add-n', 'make-multiplier', '$1'})
 ($1 5)
 > 80
 PASSED closures.sck
@@ -108,6 +126,7 @@ PASSED funcs.sck
 === SUMMARY
 simple_var.sck PASSED.
 recursion.sck PASSED.
+lazy.sck PASSED.
 closures.sck PASSED.
 parses.sck PASSED.
 add.sck PASSED.

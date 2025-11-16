@@ -1,5 +1,11 @@
 from dataclasses import dataclass
 from typing import List, Union, Optional
+from core.ck_env import Env
+
+class BaseInterpreter:
+    # to be implemented in Interpreter
+    def visit_with_env(self, env: Env):
+        ...
 
 @dataclass
 class Expr:

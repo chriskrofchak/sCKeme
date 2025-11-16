@@ -34,18 +34,18 @@ class Builtin:
     def eval(self, op: BuiltinOp, *args):
         return self.ops[op.op](*args)
 
-class Interpreter(Visitor):
+class Interpreter(Visitor, BaseInterpreter):
     def __init__(self, env=None):
         self.ops = Builtin()
         self.env = env or Env()
 
-    def visit_Integer(self, node: Integer):
+    def visit_Integer(self, node: Integer) -> int:
         return node.value
 
-    def visit_Float(self, node: Float):
+    def visit_Float(self, node: Float) -> float:
         return node.value
 
-    def visit_String(self, node: String):
+    def visit_String(self, node: String) -> str:
         return node.value
 
     def visit_Var(self, node: Var):
@@ -57,8 +57,13 @@ class Interpreter(Visitor):
                 return Closure(value.signature.params, value.value, self.env) if value.signature else self.visit(value.value) # value def
             elif isinstance(value, (int, float, str, Closure)):
                 return value
+            elif isinstance(value, Thunk):
+                return self.visit(value)
             else:
                 raise ValueError(f"Can't interpret the type, {type(value)}, of {repr(value)}")
+
+    def visit_Thunk(self, node: Thunk):
+        return node.force(self)
 
     def visit_Definition(self, node: Definition):
         self.env.set(node.name, node)
@@ -70,19 +75,24 @@ class Interpreter(Visitor):
 
     def visit_Call(self, node: Call):
         func = self.visit(node.func)
-        args = [self.visit(arg) for arg in node.args]
     
         if not isinstance(func, (Closure, BuiltinOp)):
             raise TypeError(f"Tried to call non-function: {func}")
 
         if isinstance(func, BuiltinOp):
+            args = [
+                self.visit(arg) for arg in node.args
+            ]
             self.args = args # will catch it in visit_BuiltinOp
             return self.visit(func)
 
         # else 
         assert isinstance(func, Closure)
-        self.args = args
-        return self.visit(func)
+        new_env = func.env.extend()
+        for param, arg_expr in zip(func.params, node.args):
+            thunk = Thunk(arg_expr, self.env, why=f"arg {param} in call")
+            new_env.set(param, thunk)
+        return self.visit_with_env(func.body, new_env)
 
     def visit_BuiltinOp(self, node: BuiltinOp):
         return self.ops.eval(node, *self.args)
@@ -109,7 +119,7 @@ class Interpreter(Visitor):
                 return self.visit(branch.result)
         return self.visit(node.else_branch) if node.else_branch else None
 
-    def visit_with_env(self, node, env):
+    def visit_with_env(self, node, env: Env):
         old_env = self.env
         self.env = env
         try:
