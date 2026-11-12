@@ -1,9 +1,21 @@
 from core.visitor import Visitor
-from core.ck_ast import *
+from core.ck_ast import (
+    BaseInterpreter,
+    Definition,
+    Lambda,
+    Call,
+    Var,
+    String,
+    Float,
+    Integer,
+    CondBranch,
+    Conditional
+)
 from functools import reduce
 from core.thunk import Thunk
 from core.ck_env import Env
 from core.closure import Closure
+from dataclasses import dataclass
 
 @dataclass
 class BuiltinOp:
@@ -12,16 +24,16 @@ class BuiltinOp:
 class Builtin:
     ops = {
         '+':     lambda *args: sum(args),
-        '*':     lambda *args: reduce(lambda l, r: l*r, args, 1),
-        '-':     lambda l, r: l - r,
-        '/':     lambda l, r: l / r,
-        '//':    lambda l, r: l // r,
-        '=':     lambda l, r: l == r,
-        '!=':    lambda l, r: l != r,
-        '>':     lambda l, r: l > r,
-        '<':     lambda l, r: l < r,
-        '>=':    lambda l, r: l >= r,
-        '<=':    lambda l, r: l <= r,
+        '*':     lambda *args: reduce(lambda op1, op2: op1 * op2, args, 1),
+        '-':     lambda op1, op2: op1 -  op2,
+        '/':     lambda op1, op2: op1 /  op2,
+        '//':    lambda op1, op2: op1 // op2,
+        '=':     lambda op1, op2: op1 == op2,
+        '!=':    lambda op1, op2: op1 != op2,
+        '>':     lambda op1, op2: op1 >  op2,
+        '<':     lambda op1, op2: op1 <  op2,
+        '>=':    lambda op1, op2: op1 >= op2,
+        '<=':    lambda op1, op2: op1 <= op2,
         "print": lambda *args: print(args)
     }
 
@@ -53,9 +65,7 @@ class Interpreter(Visitor, BaseInterpreter):
             return BuiltinOp(node.name)
         else:
             value = self.env.get(node.name)
-            if isinstance(value, Definition):
-                return Closure(value.signature.params, value.value, self.env) if value.signature else self.visit(value.value) # value def
-            elif isinstance(value, (int, float, str, Closure)):
+            if isinstance(value, (int, float, str, Closure, BuiltinOp)):
                 return value
             elif isinstance(value, Thunk):
                 return self.visit(value)
@@ -66,7 +76,7 @@ class Interpreter(Visitor, BaseInterpreter):
         return node.force(self)
 
     def visit_Definition(self, node: Definition):
-        self.env.set(node.name, node)
+        self.env.set(node.name, Closure(node.signature.params, node.value, self.env) if node.signature else Thunk(node.value, self.env))
         return None
 
     def visit_Lambda(self, node: Lambda):

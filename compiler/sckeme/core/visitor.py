@@ -1,4 +1,4 @@
-from lark import Lark, Transformer, v_args
+from lark import Lark, Transformer, UnexpectedInput, v_args
 from core.ck_ast import *
 
 @dataclass
@@ -63,6 +63,13 @@ class SCKemeParser:
 
     def parse(self, code: str):
         return self.parser.parse(code)
+
+    def is_blank(self, code: str) -> bool:
+        # True when code has no tokens at all, i.e. only whitespace and comments
+        try:
+            return next(iter(self.parser.lex(code)), None) is None
+        except UnexpectedInput:
+            return False
 
 class Visitor:
     def visit(self, node):

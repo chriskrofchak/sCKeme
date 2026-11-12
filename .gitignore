@@ -7,6 +7,10 @@
 passes/build
 passes/llvm-project
 
+# python virtual env (uv) and bytecode caches
+.venv
+__pycache__/
+
 # ignore LLVM output files, bytecode and executables
 *.out
 *.bc

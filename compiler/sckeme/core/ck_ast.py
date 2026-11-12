@@ -4,44 +4,44 @@ from core.ck_env import Env
 
 class BaseInterpreter:
     # to be implemented in Interpreter
-    def visit_with_env(self, env: Env):
+    def visit_with_env(self, node, env: Env):
         ...
 
-@dataclass
+
 class Expr:
     def __init__(self, *args):
         self.children = args
 
     def __repr__(self):
-        return f"{self.__class__.__name__}({', '.joini(list(map(repr, self.children)))})"
+        return f"{self.__class__.__name__}({', '.join(list(map(repr, self.children)))})"
 
-@dataclass
+@dataclass(frozen=True)
 class Literal(Expr):
     value: Union[int, float, str]
 
     def __str__(self):
         return f"{self.value}"
 
-@dataclass
+@dataclass(frozen=True)
 class Number(Literal):
     value: Union[int, float]
 
-@dataclass
+@dataclass(frozen=True)
 class Integer(Number):
     value: int
 
-@dataclass
+@dataclass(frozen=True)
 class Float(Number):
     value: float
 
-@dataclass
+@dataclass(frozen=True)
 class String(Literal):
     value: str
 
     def __str__(self):
         return f'"{self.value}"'
 
-@dataclass
+@dataclass(frozen=True)
 class Signature:
     name: str
     params: List[str]
@@ -49,7 +49,7 @@ class Signature:
     def __str__(self):
         return ' '.join(list(map(str, self.params)))
 
-@dataclass
+@dataclass(frozen=True)
 class Lambda(Expr):
     params: List[str]
     body: Expr
@@ -57,14 +57,14 @@ class Lambda(Expr):
     def __str__(self):
         return f"(lambda ({' '.join(list(map(str, self.params)))}) {str(self.body)})"
 
-@dataclass
+@dataclass(frozen=True)
 class Var(Expr):
     name: str
 
     def __str__(self):
         return self.name
 
-@dataclass
+@dataclass(frozen=True)
 class Definition(Expr):
     # If target is str => variable def
     # If target is tuple => function def: (name, [params])

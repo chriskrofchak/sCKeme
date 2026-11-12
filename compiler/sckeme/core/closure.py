@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Closure:
-    params: List[Expr]
+    params: List[str]
     body: Expr
     env: Env
     
